@@ -6,10 +6,12 @@ services:
             - TELEGRAM_API_TOKEN=${BOT_TOKEN}
             - TELEGRAM_GROUP_ID=${CHAT_ID}
         volumes:
+            - '/etc/localtime:/etc/localtime:ro'
+            - '/etc/timezone:/etc/timezone:ro'
             - '/var/run/docker.sock:/var/run/docker.sock:ro'
             - '/etc/hostname:/etc/hostname:ro'
         restart: always
-        image: 'julyighor/dockerevents:latest'
+        image: 'rkramesh/docker-events'
     minidlna:
         container_name: rkminidlna
         network_mode: host
