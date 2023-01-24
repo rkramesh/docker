@@ -1,5 +1,15 @@
-version: '3.3'
+version: '3.7'
 services:
+    dockerevents:
+        container_name: DockerEvents
+        environment:
+            - TELEGRAM_API_TOKEN=${BOT_TOKEN}
+            - TELEGRAM_GROUP_ID=${CHAT_ID}
+        volumes:
+            - '/var/run/docker.sock:/var/run/docker.sock:ro'
+            - '/etc/hostname:/etc/hostname:ro'
+        restart: always
+        image: 'julyighor/dockerevents:latest'
     minidlna:
         container_name: rkminidlna
         network_mode: host
@@ -34,3 +44,13 @@ services:
         devices:
             - /dev/video0
         image: rkramesh/motioneye
+
+    pyup:
+            container_name: pyup
+            ports:
+              - '8000:8033'
+            volumes:
+                - '/root:/root'
+                - '/media:/media'
+            image: rkramesh/pyup
+            restart: on-failure
