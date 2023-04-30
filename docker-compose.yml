@@ -1,10 +1,31 @@
 version: '3.7'
 services:
-    nginx:
-        container_name: rk-nginx
+    rknginx:
+        container_name: rknginx-proxy
+        image: 'rkramesh/nginx-proxy-manager:latest'
+        restart: unless-stopped
         ports:
-            - '80:80'
-        image: 'rkramesh/nginx:v1'
+         - '80:80'
+         - '81:81'
+         - '443:443'
+        volumes:
+          - ./data:/data
+          - ./letsencrypt:/etc/letsencrypt        
+    portainer-ce:
+        ports:
+            - '9000:9000'
+        container_name: portainer
+        restart: unless-stopped
+        volumes:
+            - '/var/run/docker.sock:/var/run/docker.sock'
+            - /'portainer_data:/data'
+        image: 'portainer/portainer-ce:latest'            
+#    nginx:
+#        container_name: rknginx
+#        ports:
+#            - '80:80'
+#        image: 'rkramesh/nginx:v1'
+#        restart: unless-stopped
     dockerevents:
         container_name: DockerEvents
         environment:
@@ -16,7 +37,7 @@ services:
             - '/var/run/docker.sock:/var/run/docker.sock:ro'
             - '/etc/hostname:/etc/hostname:ro'
         restart: always
-        image: 'rkramesh/docker-events:est'
+        image: 'rkramesh/docker-events'
     minidlna:
         container_name: rkminidlna
         network_mode: host
@@ -55,14 +76,14 @@ services:
         image: rkramesh/motioneye
 
     pyup:
-            container_name: pyup
-            ports:
-              - '8000:8033'
-            volumes:
-                - '/root:/root'
-                - '/media:/media'
-            image: rkramesh/pyup
-            restart: on-failure
+       container_name: pyup
+       ports:
+           - '8000:8033'
+       volumes:
+           - '/root:/root'
+           - '/media:/media'
+       image: rkramesh/pyup
+       restart: on-failure
     dockerbot:
       image: rkramesh/dockerbot:shellv3
       container_name: dockerbot
@@ -85,7 +106,8 @@ services:
       image: rkramesh/metube
       container_name: rktube
       restart: unless-stopped
+      privileged: true
       ports:
         - "8081:8081"
       volumes:
-        - /media:/downloads 
+        - /media:/downloads  

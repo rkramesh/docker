@@ -1,4 +1,8 @@
 location /monitor/ {
+      proxy_pass http://rkmotioneye:8888/;
+      proxy_read_timeout 86400;
+    }
+location /cams/ {
       proxy_pass http://rkmotioneye:8765/;
       proxy_read_timeout 86400;
     }
@@ -7,7 +11,10 @@ location /monitor/ {
       proxy_pass http://rkmotioneye:8081/;
       proxy_read_timeout 86400;
     }
-
+location /nginx/ {
+      proxy_pass http://rkmotioneye:81/;
+      proxy_read_timeout 86400;
+    }
     location /pyup/ {
       proxy_pass http://rkmotioneye:8000/;
       proxy_read_timeout 86400;
