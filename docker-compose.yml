@@ -1,16 +1,16 @@
 version: '3.7'
 services:
-    rknginx:
-        container_name: rknginx-proxy
-        image: 'rkramesh/nginx-proxy-manager:latest'
-        restart: unless-stopped
-        ports:
-         - '80:80'
-         - '81:81'
-         - '443:443'
-        volumes:
-          - ./data:/data
-          - ./letsencrypt:/etc/letsencrypt        
+#    rknginx:
+#        container_name: rknginx
+#        image: 'rkramesh/nginx-proxy-manager:latest'
+#        restart: unless-stopped
+#        ports:
+#         - '80:80'
+#         - '81:81'
+#         - '443:443'
+#        volumes:
+#          - ./data:/data
+#          - ./letsencrypt:/etc/letsencrypt        
     portainer-ce:
         ports:
             - '9000:9000'
@@ -20,12 +20,12 @@ services:
             - '/var/run/docker.sock:/var/run/docker.sock'
             - /'portainer_data:/data'
         image: 'portainer/portainer-ce:latest'            
-#    nginx:
-#        container_name: rknginx
-#        ports:
-#            - '80:80'
-#        image: 'rkramesh/nginx:v1'
-#        restart: unless-stopped
+    nginx:
+        container_name: rknginx
+        ports:
+            - '80:80'
+        image: 'rkramesh/nginx:v1'
+        restart: unless-stopped
     dockerevents:
         container_name: DockerEvents
         environment:
@@ -64,6 +64,7 @@ services:
         container_name: rkeye
         ports:
             - '8765:8765'
+            - '8085:8085'
         hostname: rkeye
         volumes:
             - '/etc/localtime:/etc/localtime:ro'
@@ -73,8 +74,14 @@ services:
         restart: always
         devices:
             - /dev/video0
-        image: rkramesh/motioneye
-
+        image: rkramesh/motioneye:latest
+        healthcheck:
+         test: ["CMD", "curl", "-f", "http://localhost:8765"]
+         interval: 5s
+         timeout: 200s
+         retries: 5
+ 
+           
     pyup:
        container_name: pyup
        ports:
@@ -111,3 +118,8 @@ services:
         - "8081:8081"
       volumes:
         - /media:/downloads  
+      healthcheck:
+       test: ["CMD", "curl", "-f", "http://localhost:8081"]
+       interval: 5s
+       timeout: 200s
+       retries: 5
