@@ -1,0 +1,3 @@
+pre-req
+1. create directory /media, copy .sh files
+2. crontab -e  @reboot /media/execpipe.sh
