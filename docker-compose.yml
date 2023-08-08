@@ -1,6 +1,6 @@
 version: '3.7'
 services:
-    rpi-monitor:
+    rpi_monitor:
         devices:
             - /dev/vchiq
             - /dev/vcs
@@ -13,19 +13,20 @@ services:
             - '/usr/lib:/dockerhost/usr/lib:ro'
         ports:
             - '8888:8888'
-        container_name: rpi-monitor
+        container_name: rpi_monitor
         image: 'michaelmiklis/rpi-monitor:latest'        
-#    rknginx:
-#        container_name: rknginx
-#        image: 'rkramesh/nginx-proxy-manager:latest'
-#        restart: unless-stopped
-#        ports:
-#         - '80:80'
-#         - '81:81'
-#         - '443:443'
-#        volumes:
-#          - ./data:/data
-#          - ./letsencrypt:/etc/letsencrypt        
+        restart: unless-stopped
+    botapiplus:
+        ports:
+            - '8085:8081'
+        container_name: bot_api
+        restart: always
+        volumes:
+            - telegram-bot-api-data:/var/lib/telegram-bot-api
+        environment:
+            - TELEGRAM_API_ID=${TELEGRAM_DAEMON_API_ID}
+            - TELEGRAM_API_HASH=${TELEGRAM_DAEMON_API_HASH}
+        image: 'smaznet98/botapiplus:latest'
 
     portainer-ce:
         ports:
@@ -90,6 +91,9 @@ services:
         ports:
             - '8765:8765'
         hostname: rkeye
+        environment:
+          - BOT_TOKEN=${BOT_TOKEN}
+          - CHAT_ID=${CHAT_ID}
         volumes:
             - '/etc/localtime:/etc/localtime:ro'
             - '/media:/media'
@@ -117,7 +121,7 @@ services:
       cap_add:
          - NET_ADMIN
       privileged: true
-      restart: unless-stopped
+      restart: always
       environment:
         - API_KEY=${INFO_BOT_TOKEN}
         - ALLOWED_IDS=${CHAT_ID}
@@ -137,3 +141,5 @@ services:
         - "8081:8081"
       volumes:
         - /media:/downloads  
+volumes:
+  telegram-bot-api-data:
