@@ -1,0 +1,6 @@
+# convert a single image
+magick convert foo.HEIC foo.jpg
+
+# bulk convert multiple images
+magick mogrify -monitor -format jpg *.HEIC
+for i in *; do if [[ $i == *.JPG ]]; then   echo $i -IMAGE;curl -s _X POST http://rkmotioneye:8085/bot$BOT_TOKEN/sendPhoto -F chat_id=$CHAT_ID_CHL -F photo=@$i; else   echo $i - Video;curl -s _X POST http://rkmotioneye:8085/bot$BOT_TOKEN/sendVideo -F chat_id=$CHAT_ID_CHL -F video=@$i fi ; done
