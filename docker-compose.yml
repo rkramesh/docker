@@ -27,7 +27,6 @@ services:
             - TELEGRAM_API_ID=${TELEGRAM_DAEMON_API_ID}
             - TELEGRAM_API_HASH=${TELEGRAM_DAEMON_API_HASH}
         image: 'smaznet98/botapiplus:latest'
-
     portainer-ce:
         ports:
             - '9000:9000'
@@ -43,18 +42,18 @@ services:
             - '80:80'
         image: 'rkramesh/nginx:v1'
         restart: unless-stopped
-    dockerevents:
-        container_name: DockerEvents
-        environment:
-            - TELEGRAM_API_TOKEN=${UK_BOT_TOKEN}
-            - TELEGRAM_GROUP_ID=${CHAT_ID}
-        volumes:
-            - '/etc/localtime:/etc/localtime:ro'
-            - '/etc/timezone:/etc/timezone:ro'
-            - '/var/run/docker.sock:/var/run/docker.sock:ro'
-            - '/etc/hostname:/etc/hostname:ro'
-        restart: always
-        image: 'julyighor/dockerevents:latest'
+#    dockerevents:
+#        container_name: DockerEvents
+#        environment:
+#            - TELEGRAM_API_TOKEN=${INFO_BOT_TOKEN}
+#            - TELEGRAM_GROUP_ID=${CHAT_ID}
+#        volumes:
+#            - '/etc/localtime:/etc/localtime:ro'
+#            - '/etc/timezone:/etc/timezone:ro'
+#            - '/var/run/docker.sock:/var/run/docker.sock:ro'
+#            - '/etc/hostname:/etc/hostname:ro'
+#        restart: always
+#        image: 'julyighor/dockerevents:latest'
     rpi-readymedia:
         container_name: readymedia
         restart: always
@@ -62,20 +61,6 @@ services:
             - '/media:/data/media'
         network_mode: host
         image: rkramesh/minidlna        
-#    minidlna:
-#        container_name: rkminidlna
-#        network_mode: host
-#        volumes:
-#            - '/media:/media'
-#        ports:
-#            - '8200:8200'
-#        environment:
-#             - MINIDLNA_MEDIA_DIR=/media
-#             - MINIDLNA_LISTENING_IP=host
-#             - MINIDLNA_PORT=8200
-#             - MINIDLNA_FRIENDLY_NAME=rkdlna
-#               #   restart: always
-#        image: vladgh/minidlna
     aria2-rpi:
         container_name: aria2
         ports:
@@ -103,8 +88,6 @@ services:
         devices:
             - /dev/video0
         image: rkramesh/motioneye:latest
- 
-           
     pyup:
        container_name: pyup
        ports:
@@ -141,5 +124,15 @@ services:
         - "8081:8081"
       volumes:
         - /media:/downloads  
+    dockerevents:
+        container_name: DockerEvents
+        environment:
+            - TELEGRAM_API_TOKEN=${INFO_BOT_TOKEN}
+            - TELEGRAM_GROUP_ID=${CHAT_ID}
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - '/etc/hostname:/etc/hostname:ro'
+        restart: always
+        image: 'julyighor/dockerevents:latest'
 volumes:
   telegram-bot-api-data:
