@@ -1,3 +1,9 @@
 pre-req
-1. create directory /media, copy .sh files
-2. crontab -e  @reboot /media/execpipe.sh
+apt-get update
+install vim
+mkfifo /media/rkpip
+clone https://github.com/rkramesh/docker.git into root
+create symbolic link ln -s /root/docker/docker-compose.yml docker-compose.yml  
+copy .bashrc,py-up.py to root folder
+copy sendvideo.sh,execpipe.sh to /media
+crontab -e  @reboot /media/execpipe.sh
