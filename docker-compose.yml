@@ -42,18 +42,6 @@ services:
             - '80:80'
         image: 'rkramesh/nginx:v1'
         restart: unless-stopped
-#    dockerevents:
-#        container_name: DockerEvents
-#        environment:
-#            - TELEGRAM_API_TOKEN=${INFO_BOT_TOKEN}
-#            - TELEGRAM_GROUP_ID=${CHAT_ID}
-#        volumes:
-#            - '/etc/localtime:/etc/localtime:ro'
-#            - '/etc/timezone:/etc/timezone:ro'
-#            - '/var/run/docker.sock:/var/run/docker.sock:ro'
-#            - '/etc/hostname:/etc/hostname:ro'
-#        restart: always
-#        image: 'julyighor/dockerevents:latest'
     rpi-readymedia:
         container_name: readymedia
         restart: always
@@ -98,7 +86,7 @@ services:
        image: rkramesh/pyup
        restart: on-failure
     dockerbot:
-      image: rkramesh/dockerbot:shellv3
+      image: rkramesh/dockerbot:events
       container_name: dockerbot
       network_mode: host
       cap_add:
@@ -108,6 +96,8 @@ services:
       environment:
         - API_KEY=${INFO_BOT_TOKEN}
         - ALLOWED_IDS=${CHAT_ID}
+        - TELEGRAM_API_TOKEN=${INFO_BOT_TOKEN}
+        - TELEGRAM_GROUP_ID=${CHAT_ID}
       volumes:
          - /var/run/docker.sock:/var/run/docker.sock
          - '/etc/localtime:/etc/localtime:ro'
@@ -124,15 +114,5 @@ services:
         - "8081:8081"
       volumes:
         - /media:/downloads  
-    dockerevents:
-        container_name: DockerEvents
-        environment:
-            - TELEGRAM_API_TOKEN=${INFO_BOT_TOKEN}
-            - TELEGRAM_GROUP_ID=${CHAT_ID}
-        volumes:
-            - /var/run/docker.sock:/var/run/docker.sock
-            - '/etc/hostname:/etc/hostname:ro'
-        restart: always
-        image: 'julyighor/dockerevents:latest'
 volumes:
   telegram-bot-api-data:
