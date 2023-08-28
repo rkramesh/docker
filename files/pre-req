@@ -1,9 +1,12 @@
 pre-req
 apt-get update
-install vim
+install vim,docker, docker-compose, git
 mkfifo /media/rkpip
 clone https://github.com/rkramesh/docker.git into root
-create symbolic link ln -s /root/docker/docker-compose.yml docker-compose.yml  
+create symbolic link ln -s /root/docker/docker-compose.yml docker-compose.yml 
+    ln -s /root/docker/files/py-up.py py-up.py
+   ln -s /root/docker/files/execpipe.sh execpipe.sh
 copy .bashrc,py-up.py to root folder
 copy sendvideo.sh,execpipe.sh to /media
 crontab -e  @reboot /media/execpipe.sh
+echo -e "fs.inotify.max_user_watches=204800" | tee -a /etc/sysctl.conf
