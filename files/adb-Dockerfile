@@ -1,0 +1,14 @@
+# Use a lightweight base image
+FROM alpine:latest
+
+# Install required dependencies
+RUN apk update && \
+    apk add --no-cache \
+    android-tools \
+    grep
+
+# Set the working directory
+WORKDIR /app
+
+CMD []
+
