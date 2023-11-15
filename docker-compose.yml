@@ -76,6 +76,27 @@ services:
         devices:
             - /dev/video0
         image: rkramesh/motioneye:latest
+
+    adb:
+       container_name: adb
+       image: rkramesh/adb
+       command: >
+         /bin/sh -c 'adb disconnect &&
+                     adb connect 192.168.1.252 &&
+                     sleep 5 &&
+                     adb devices &&
+                     while true; do
+                       adb logcat -c && adb logcat | awk "/http:\/\/.*\.m3u8|.mkv/ && !/0\$/ && !/\)\$/ {
+                         match(\$0, /http:\/\/[^ ]+/);
+                         url = substr(\$0, RSTART, RLENGTH);
+                         title = gensub(/.*\/([^\/]+).*.m3u8.*/, \"\\1\", \"g\", url);
+                         printf \"#EXTINF:0,%s\\n%s\\n\", title, url
+                       }" | tee  /media/media.m3u;
+                       sleep 3;
+                     done'
+       volumes:
+            - '/media:/media'
+
     pyup:
        container_name: pyup
        ports:
@@ -104,6 +125,7 @@ services:
          - '/etc/timezone:/etc/timezone:ro'
          - /media:/media
          - /proc/sysrq-trigger:/sysrq
+         - '/usr/lib/android-sdk:/dockerhost/usr/lib:ro'
     metube:
       hostname: rktube
       image: ghcr.io/alexta69/metube
