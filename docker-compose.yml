@@ -107,7 +107,7 @@ services:
        image: rkramesh/pyup
        restart: on-failure
     dockerbot:
-      image: rkramesh/dockerbot:events
+      image: rkramesh/dockerbot:m3u
       container_name: dockerbot
       network_mode: host
       cap_add:
