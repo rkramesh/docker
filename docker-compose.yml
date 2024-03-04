@@ -11,6 +11,9 @@ services:
             - '/etc:/dockerhost/etc:ro'
             - '/proc:/dockerhost/proc:ro'
             - '/usr/lib:/dockerhost/usr/lib:ro'
+            - '/var/lib/rpimonitor:/var/lib/rpimonitor'
+        environment:
+            - LD_LIBRARY_PATH=/opt/vc/lib
         ports:
             - '8888:8888'
         container_name: rpi_monitor
@@ -36,12 +39,12 @@ services:
             - '/var/run/docker.sock:/var/run/docker.sock'
             - /'portainer_data:/data'
         image: 'portainer/portainer-ce:latest'
-    nginx:
-        container_name: rknginx
-        ports:
-            - '80:80'
-        image: 'rkramesh/nginx:v1'
-        restart: unless-stopped
+#    nginx:
+#        container_name: rknginx
+#        ports:
+#            - '80:80'
+#        image: 'rkramesh/nginx:v1'
+#        restart: unless-stopped
     rpi-readymedia:
         container_name: readymedia
         restart: always
@@ -49,16 +52,16 @@ services:
             - '/media:/data/media'
         network_mode: host
         image: rkramesh/minidlna
-    aria2-rpi:
-        container_name: aria2
-        ports:
-            - '8082:80'
-            - '6800:6800'
-        volumes:
-            - '/:/data'
-            - '/media:/media'
-        restart: always
-        image: rkramesh/aria2-rpi
+#    aria2-rpi:
+#        container_name: aria2
+#        ports:
+#            - '8082:80'
+#            - '6800:6800'
+#        volumes:
+#            - '/:/data'
+#            - '/media:/media'
+#        restart: always
+#        image: rkramesh/aria2-rpi
     rkeye:
         container_name: rkeye
         ports:
@@ -124,15 +127,15 @@ services:
          - /media:/media
          - /proc/sysrq-trigger:/sysrq
          - '/usr/lib/android-sdk:/dockerhost/usr/lib:ro'
-    metube:
-      hostname: rktube
-      image: ghcr.io/alexta69/metube
-      container_name: rktube
-      restart: unless-stopped
-      privileged: true
-      ports:
-        - "8081:8081"
-      volumes:
-        - /media:/downloads  
+#    metube:
+#      hostname: rktube
+#      image: ghcr.io/alexta69/metube
+#      container_name: rktube
+#      restart: unless-stopped
+#      privileged: true
+#      ports:
+#        - "8081:8081"
+#      volumes:
+#        - /media:/downloads  
 volumes:
   telegram-bot-api-data:
