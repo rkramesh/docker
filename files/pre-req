@@ -1,7 +1,8 @@
 pre-req
 apt-get update
-install vim,docker, docker-compose, git
+install vim,docker, docker-compose, git,openssh
 mkfifo /media/rkpipe
+cd /root
 clone https://github.com/rkramesh/docker.git into root
 create symbolic link ln -s /root/docker/docker-compose.yml docker-compose.yml 
     ln -s /root/docker/files/py-up.py py-up.py
