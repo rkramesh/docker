@@ -5,7 +5,9 @@ Get bashrc from tm
 mkfifo /media/rkpipe
 cd /root
 clone https://github.com/rkramesh/docker.git into root
-create symbolic link ln -s /root/docker/docker-compose.yml docker-compose.yml 
+create symbolic link 
+   ln -s /root/docker/files/.bash_aliases ~/.bash_aliases [ home direc]
+    ln -s /root/docker/docker-compose.yml docker-compose.yml 
     ln -s /root/docker/files/py-up.py py-up.py
    ln -s /root/docker/files/execpipe.sh execpipe.sh
 copy .bashrc,py-up.py to root folder
