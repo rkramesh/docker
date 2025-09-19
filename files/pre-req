@@ -1,6 +1,7 @@
 pre-req
 apt-get update
 install vim,docker, docker-compose, git,openssh
+Get bashrc from tm
 mkfifo /media/rkpipe
 cd /root
 clone https://github.com/rkramesh/docker.git into root
