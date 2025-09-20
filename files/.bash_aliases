@@ -37,5 +37,4 @@ dkill() {
 
   # Remove dangling volumes
   docker volume ls -qf "dangling=true" | xargs -r docker volume rm
-
-  echo "Container $1 and
+}
