@@ -11,7 +11,8 @@ create symbolic link
     ln -s /root/docker/files/py-up.py py-up.py
    ln -s /root/docker/files/execpipe.sh execpipe.sh
 copy .bashrc,py-up.py to root folder
-copy sendvideo.sh,execpipe.sh,rpi_backup.sh to /media as symbolic link
+copy sendvideo.sh(no sym link),execpipe.sh,rpi_backup.sh to /media
+
 
 crontab -e  
 # m h  dom mon dow   command
