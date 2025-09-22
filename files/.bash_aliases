@@ -12,7 +12,7 @@ alias drmi="docker image prune -a -f"    # Remove all unused Docker images
 
 
 # Docker Exec: Execute a command inside a running container
-dexec() {
+dsh() {
   if [ -z "$2" ]; then
     # If no second argument, attempt to open bash or fallback to sh
     docker exec -it "$1" /bin/bash || docker exec -it "$1" /bin/sh

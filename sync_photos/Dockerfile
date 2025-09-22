@@ -13,8 +13,4 @@ RUN apt update && apt install -y \
   libheif-examples\
   && apt clean
 
-COPY mount_iphone.sh /mount_iphone.sh
-RUN chmod +x /mount_iphone.sh
-
-ENTRYPOINT ["/mount_iphone.sh"]
-
+WORKDIR /

@@ -1,8 +1,7 @@
 version: '3.8'
-
 services:
-  iphone_mount:
-    container_name: iphone_mount
+  sync_photo:
+    container_name: sync_photo
     build:
       context: .
       dockerfile: Dockerfile
@@ -18,8 +17,6 @@ services:
       - SYS_ADMIN
     volumes:
       - /var/run/usbmuxd:/var/run/usbmuxd
-      - ./iphone_photos:/photos
-      - ./copy_album_media.sh:/copy_album_media.sh
-      - ./send_album_to_telegram.sh:/send_album_to_telegram.sh
-    entrypoint: /mount_iphone.sh
+      - ./scripts:/scripts
+    entrypoint: /scripts/mount_iphone.sh
 
