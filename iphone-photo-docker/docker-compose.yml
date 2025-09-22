@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  iphone_mount:
+    container_name: iphone_mount
+    build:
+      context: .
+      dockerfile: Dockerfile
+    privileged: true
+    restart: unless-stopped
+    devices:
+      - /dev/bus/usb
+      - /dev/fuse
+    cap_add:
+      - SYS_ADMIN
+    volumes:
+      - /var/run/usbmuxd:/var/run/usbmuxd
+      - ./iphone_photos:/photos
+    entrypoint: /mount_iphone.sh
+
