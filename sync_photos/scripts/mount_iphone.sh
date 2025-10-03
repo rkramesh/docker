@@ -1,22 +1,32 @@
 #!/bin/bash
 set -e
 
-echo "[*] Waiting for iPhone to be connected..."
+MOUNT_POINT="/mnt/iphone"
+mkdir -p "$MOUNT_POINT"
 
-while ! ideviceinfo &>/dev/null; do
-  sleep 2
-done
+echo "[*] Starting iPhone monitor in background..."
 
-echo "[*] iPhone detected."
+# Background loop to detect and mount iPhone
+(
+  while true; do
+    if ideviceinfo &>/dev/null; then
+        echo "[*] iPhone detected."
 
-idevicepair pair || echo "[*] Already paired."
+        # Pair the device if needed
+        idevicepair pair 2>/dev/null || echo "[*] Already paired."
 
-mkdir -p /mnt/iphone
+        # Mount only if not already mounted
+        if ! mount | grep -q "$MOUNT_POINT"; then
+            ifuse "$MOUNT_POINT"
+            echo "[*] Mounted iPhone to $MOUNT_POINT"
+        fi
+    else
+        echo "[*] No iPhone detected. Waiting..."
+    fi
+    sleep 5
+  done
+) &
 
-ifuse /mnt/iphone
-
-echo "[*] Mounted iPhone to /mnt/iphone"
-
-# Keep container alive, no copying here
+# Keep container alive
 tail -f /dev/null
 

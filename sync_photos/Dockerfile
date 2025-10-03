@@ -1,4 +1,4 @@
-FROM arm32v7/debian:bullseye-slim
+FROM arm64v8/debian:bullseye-slim
 
 RUN apt update && apt install -y \
   ifuse \
@@ -10,7 +10,9 @@ RUN apt update && apt install -y \
   fuse \
   rsync \
   sqlite3 \
-  libheif-examples\
-  && apt clean
+  libheif-examples \
+  imagemagick \
+  && apt clean \
+  && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /

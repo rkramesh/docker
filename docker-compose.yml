@@ -12,6 +12,7 @@ services:
             - '/proc:/dockerhost/proc:ro'
             - '/usr/lib:/dockerhost/usr/lib:ro'
             - '/var/lib/rpimonitor:/var/lib/rpimonitor'
+            - /usr/bin/vcgencmd:/usr/bin/vcgencmd:ro   
         environment:
             - LD_LIBRARY_PATH=/opt/vc/lib
         ports:

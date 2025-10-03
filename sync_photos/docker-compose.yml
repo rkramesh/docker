@@ -7,16 +7,40 @@ services:
       dockerfile: Dockerfile
     privileged: true
     restart: unless-stopped
+
     environment:
-      - BOT_TOKEN=${LINK_BOT_TOKEN}
+      # Required
+      - BOT_TOKEN=${RKHOME_BOT_TOKEN}
       - CHAT_ID=${CHAT_ID}
+
+      # Video batching (group small videos; route groups via API server)
+      - VIDEO_GROUPING=1
+      - VIDEO_GROUP_VIA_API=1
+      - VIDEO_GROUP_MAX_ITEMS=10
+      - VIDEO_GROUP_MAX_TOTAL=419430400   # 400 MB in bytes
+      - MAX_TELEGRAM_SIZE=52428800        # 50 MB per-video threshold
+
+      # Photos / API / Logs / Retry
+      - BATCH_SIZE=10
+      - API_SERVER=http://rkmotioneye:8085
+      - LOG_DIR=/logs                   # logs written here inside container
+      - RETRY_FAILED=0                  # set to 1 only for retry-only runs
+
+      # Optional: separate notifier bot (to same CHAT_ID)
+      - INFO_BOT_TOKEN=${INFO_BOT_TOKEN}
+
     devices:
       - /dev/bus/usb
       - /dev/fuse
     cap_add:
       - SYS_ADMIN
+
     volumes:
       - /var/run/usbmuxd:/var/run/usbmuxd
-      - ./scripts:/scripts
-    entrypoint: /scripts/mount_iphone.sh
+      - ./scripts:/scripts:ro
+      # Persist album state (sent_/failed_/skip_) across restarts
+      - ./data/album_state:/tmp/album_state
+      # Host-visible logs
+      - ./data/logs:/logs
 
+    entrypoint: /scripts/mount_iphone.sh

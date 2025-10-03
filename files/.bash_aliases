@@ -38,3 +38,22 @@ dkill() {
   # Remove dangling volumes
   docker volume ls -qf "dangling=true" | xargs -r docker volume rm
 }
+# Restart a container by name or ID
+dres() {
+  if [ -z "$1" ]; then
+    echo "Usage: dres <container_name_or_id>"
+    return 1
+  fi
+  docker restart "$1"
+}
+
+# Tail logs of a container (follow mode)
+dl() {
+  if [ -z "$1" ]; then
+    echo "Usage: dl <container_name_or_id> [lines]"
+    return 1
+  fi
+  LINES=${2:-100} # default to last 100 lines
+  docker logs --tail "$LINES" -f "$1"
+}
+
