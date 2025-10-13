@@ -37,7 +37,7 @@ services:
 
     volumes:
       - /var/run/usbmuxd:/var/run/usbmuxd
-      - ./scripts:/scripts:ro
+      - ./scripts:/scripts
       # Persist album state (sent_/failed_/skip_) across restarts
       - ./data/album_state:/tmp/album_state
       # Host-visible logs
