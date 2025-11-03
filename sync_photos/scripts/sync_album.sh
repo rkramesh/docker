@@ -537,9 +537,42 @@ if [[ "$RETRY_FAILED" == "1" ]]; then
                 continue
             fi
 
-            # Try conversion with memory limit and error capture
-            convert_error=$(convert "$f" -limit memory 256MB -limit disk 1GB \
-                -auto-orient -resize 2048x2048\> -quality 92 -strip "$jpg_path" 2>&1)
+            # Try conversion with Python Pillow (more reliable for iPhone HEIC files)
+            convert_error=$(python3 -c "
+from PIL import Image
+from pillow_heif import register_heif_opener
+import sys
+
+try:
+    register_heif_opener()
+    img = Image.open('$f')
+    # Auto-orient and resize similar to ImageMagick settings
+    if hasattr(img, '_getexif') and img._getexif():
+        from PIL.ExifTags import ORIENTATION
+        exif = img._getexif()
+        if exif and ORIENTATION in exif:
+            orientation = exif[ORIENTATION]
+            if orientation == 3:
+                img = img.rotate(180, expand=True)
+            elif orientation == 6:
+                img = img.rotate(270, expand=True) 
+            elif orientation == 8:
+                img = img.rotate(90, expand=True)
+    
+    # Resize if larger than 2048x2048
+    if img.width > 2048 or img.height > 2048:
+        img.thumbnail((2048, 2048), Image.Resampling.LANCZOS)
+    
+    # Convert to RGB if needed and save as JPEG
+    if img.mode in ('RGBA', 'LA', 'P'):
+        img = img.convert('RGB')
+    
+    img.save('$jpg_path', 'JPEG', quality=92, optimize=True)
+    print('SUCCESS')
+except Exception as e:
+    print(f'ERROR: {e}', file=sys.stderr)
+    sys.exit(1)
+" 2>&1)
 
             if [[ $? -eq 0 && -f "$jpg_path" && -s "$jpg_path" ]]; then
                 echo "$(date) [HEIC] ✅ HEIC converted: $(basename "$f")" | tee -a "$LOG_FILE"
@@ -632,8 +665,41 @@ else
                 continue
             fi
 
-            convert_error=$(convert "$f" -limit memory 256MB -limit disk 1GB \
-                -auto-orient -resize 2048x2048\> -quality 92 -strip "$jpg_path" 2>&1)
+            convert_error=$(python3 -c "
+from PIL import Image
+from pillow_heif import register_heif_opener
+import sys
+
+try:
+    register_heif_opener()
+    img = Image.open('$f')
+    # Auto-orient and resize similar to ImageMagick settings
+    if hasattr(img, '_getexif') and img._getexif():
+        from PIL.ExifTags import ORIENTATION
+        exif = img._getexif()
+        if exif and ORIENTATION in exif:
+            orientation = exif[ORIENTATION]
+            if orientation == 3:
+                img = img.rotate(180, expand=True)
+            elif orientation == 6:
+                img = img.rotate(270, expand=True) 
+            elif orientation == 8:
+                img = img.rotate(90, expand=True)
+    
+    # Resize if larger than 2048x2048
+    if img.width > 2048 or img.height > 2048:
+        img.thumbnail((2048, 2048), Image.Resampling.LANCZOS)
+    
+    # Convert to RGB if needed and save as JPEG
+    if img.mode in ('RGBA', 'LA', 'P'):
+        img = img.convert('RGB')
+    
+    img.save('$jpg_path', 'JPEG', quality=92, optimize=True)
+    print('SUCCESS')
+except Exception as e:
+    print(f'ERROR: {e}', file=sys.stderr)
+    sys.exit(1)
+" 2>&1)
 
             if [[ $? -eq 0 && -f "$jpg_path" && -s "$jpg_path" ]]; then
                 echo "$(date) [HEIC] ✅ HEIC converted: $(basename "$f")" | tee -a "$LOG_FILE"
@@ -732,3 +798,4 @@ echo "$(date) [SUCCESS] 🎉 Album sync completed successfully!" | tee -a "$LOG_
 status_msg="OK"
 if (( error_count > 0 )); then status_msg="ERRORS:$error_count"; fi
 tg_notify "DONE ✅ album=$ALBUM_NAME sent=$final_sent failed=$final_failed skipped=$final_skipped already=$RUN_ALREADY total=$total_files status=$status_msg"
+
