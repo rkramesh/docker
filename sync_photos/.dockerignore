@@ -1,0 +1,24 @@
+data/
+*.log
+
+# Exclude scripts directory (mounted as volume, not copied into image)
+scripts/
+
+# Exclude git
+.git/
+.gitignore
+
+# Exclude temporary files
+*.tmp
+*.swp
+*~
+
+# Exclude documentation
+README.md
+*.md
+
+# Exclude IDE files
+.vscode/
+.idea/
+
+# Keep only what's needed: Dockerfile and scripts/
